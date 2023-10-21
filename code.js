@@ -10,10 +10,13 @@ class Ball{
         this.x = Math.random()*canvas_.width
         this.y = y
         this.y = Math.random()*canvas_.height
-        this.xdelta = 5
-        this.ydelta = 5
+        this.xdelta = 2
+        this.ydelta = 2
         this.size = 30
         console.log(this.color)
+        this.image = new Image()
+        this.image.src = "GLORYPONY.png"
+
     }
 
     update(){
@@ -32,6 +35,14 @@ class Ball{
         ctx.beginPath();
         ctx.arc(this.x,this.y,this.size, 0,Math.PI*2,true);
         ctx.fill();
+
+        ctx.drawImage(
+            this.image,
+            this.x,
+            this.y,
+            100,
+            100
+        )
     }
 
 
