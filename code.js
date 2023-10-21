@@ -1,44 +1,49 @@
 let loop;
 let fps = 60;
 let canvas_, ctx;
-let ball = {
-    xpos : 0,
-    ypos : 0,
-    xvel : 5,
-    yvel : 5,
-    size : 30,
-    color : 'white',
-    init : function(canvas_) {
-        this.xpos = ( canvas_.width - this.size) / 2;
-        this.ypos = ( canvas_.height - this.size) / 2;
-    },
-    update : function(canvas_) {
-        this.xpos += this.xvel;
-        this.ypos += this.yvel;
-        this.checkForCollisions(canvas_);
-    },
-    draw : function(ctx) {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.xpos,this.ypos,this.size, 0,Math.PI*2, true);
-        ctx.fill();
-    },
-    checkForCollisions : function(canvas_) {
-        console.log('collision');
-        if (this.xpos + this.size /2 > canvas_.width || this.xpos - this.size / 2 < 0 ){
-            this.xvel = -this.xvel;
+let balls = [];
+
+class Ball{
+    constructor(color, x, y){
+        this.color = color
+        this.x = x
+        this.x = Math.random()*canvas_.width
+        this.y = y
+        this.y = Math.random()*canvas_.height
+        this.xdelta = 5
+        this.ydelta = 5
+        this.size = 30
+        console.log(this.color)
+    }
+
+    update(){
+        this.x += this.xdelta;
+        this.y += this.ydelta;
+        if (this.x + this.size / 2 > canvas_.width || this.x - this.size / 2 < 0){
+            this.xdelta = -this.xdelta;
         }
-        if (this.ypos + this.size / 2 > canvas_.height || this.ypos - this.size / 2 < 0){
-            this.yvel = -this.yvel;
+        if (this.y + this.size / 2 > canvas_.height || this.y - this.size / 2 < 0){
+            this.ydelta = -this.ydelta;
         }
     }
-    
+
+    draw(ctx){
+        ctx.fillStyle = this.color
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,this.size, 0,Math.PI*2,true);
+        ctx.fill();
+    }
+
+
 }
 
 window.onload = function () {
         console.log('Gameloop');
         prepareCanvas();
-        ball.init(canvas_);
+        let ball1 = new Ball('green', 50, 50)
+        balls.push(ball1)
+        let ball2 = new Ball('red', 80, 80)
+        balls.push(ball2)
         prepareKeyboardInput();
         loop = setInterval (() =>  {
             update();
@@ -63,16 +68,22 @@ function prepareCanvas() {
 function prepareKeyboardInput() {
     document.addEventListener('mousedown', (event) => {
         console.log('click');
-        ball.xvel = -ball.xvel;
+        for (let ball of balls) {
+            ball.xdelta = -ball.xdelta
+            ball.ydelta = -ball.ydelta
+        }
     },false);
 }
 
-
 function update () {
-    ball.update(canvas_);
+    for (let ball of balls) {
+        ball.update();
+    }
 }
 
 function render () {
     fillCanvas ();
-    ball.draw(ctx);
+    for (let ball of balls) {
+        ball.draw(ctx);
+    }
 }
