@@ -32,6 +32,7 @@ let ball = {
             this.yvel = -this.yvel;
         }
     }
+    
 }
 
 window.onload = function () {
